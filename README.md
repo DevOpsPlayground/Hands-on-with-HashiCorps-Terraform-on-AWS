@@ -1,11 +1,14 @@
 # devopsplayground6-terraform
-Materials for the Devops Playground organized by Forest technologies, about Terraform and AWS
 
 
 # Overview
+This Devops Playground will explore Infrastructure as Code with Hashicorp Terraform and  AWS. The plan is to automate the creation of AWS resources, using terraform.  In order to display the full extent of Terraform's features, we will try to lauch two WebServer instances, and put them behind a load balancer, transparently, through a single, unified template.
 
-# Expected Solution
+## Expected Solution
+Visualy, we should be able to create the below infrastructure from terraform, in one command. 
+![solution Architecture](../schema.png?raw=true "Two Webservers behind a Load Balancer")
 
+The two webserver-images we are using for this playground are baked with some very simple PHP code, to display their local IP.
 # Requirements
 
 # AWS required knowledge
