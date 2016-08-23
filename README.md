@@ -15,8 +15,6 @@ The two webserver-images we are using for this playground are baked with some ve
 
 ## Step 1 : Define the Provider
 
-## Step 2 : Create one EC2 instance
-
 ### Define the Provider
 
 Before Terraform can create resources, it needs to know which platform to connect to.
@@ -33,6 +31,7 @@ provider "aws" {
 }
 ```
 Here we want to  create resources in the region *eu-central-1*, which is the Frankfurt region.
+## Step 2 : Create one EC2 instance
 
 ### Create our first ressources, an EC2 instance and its security group
 The first resource we want to create, as a part of our infrastructure as code configuration, is an EC2 instance.
