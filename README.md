@@ -6,7 +6,7 @@ This Devops Playground will explore Infrastructure as Code with Hashicorp Terraf
 
 ## Expected Solution
 Visualy, we should be able to create the below infrastructure from terraform, in one command. 
-![solution Architecture](../schema.png?raw=true "Two Webservers behind a Load Balancer")
+![solution Architecture](./schema.png?raw=true "Two Webservers behind a Load Balancer")
 
 The two webserver-images we are using for this playground are baked with some very simple PHP code, to display their local IP.
 # Requirements
