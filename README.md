@@ -126,10 +126,9 @@ output "ip-webserver-1" {
 
 Here we decide on which AMI to use, the instance size of the new instance, and its security group.
 
->security_groups = ["${aws_security_group.default.name}"]
+>security_groups = ["${aws_security_group.SG-Webserver-<yourname>.name"]
 
-This line is what is called an implicit dependency. Using a dynamic reference, Terraform will automatically fill this value, **only when a security group has been created**.
-See next step for the security group.
+This line is what is called an implicit dependency. Using a dynamic reference, Terraform will automatically find the _name_ value of the _SG-Webserver-<yourname>_ resource.
 
 
 
@@ -148,8 +147,7 @@ If we are satisfied with the plan, we can 'push' the changes to AWS, and terrafo
 
 ...This operation can take several minutes to finish.
 
-
-
+If everything is successful, the output of this first run should be _ip-webserver-1_, let's try to connect to this address.
 
 ## Step 5: Create a second instance
 In the same terraform configuration file, let's add a a new resource block to add a second EC2 instance.
