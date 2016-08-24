@@ -67,7 +67,8 @@ ingress {
 ```
 **This block allows any inbound TCP connection from port 22 to port 22, from  any target IP address.**
 
-Let's add the below to our *playground.tf*:
+Let's add the below to our _playground.tf_:
+*Make sure to replace _<yourname>_ with your name.*
 ```
 resource "aws_security_group" "SG-Webserver-<yourname>" {
   name = "SG-Webserver-<yourname>"
@@ -107,6 +108,8 @@ For the this playground, Forest technologies has prepared a custom Amazon Machin
 
 This AMI is available as a community AMI, and is publicly available. It is an Ubuntu Server image, running an Apache WebServer.
 
+Let's copy this code into our _playground.tf_.
+*Make sure to replace _<yourname>_ with your name.*
 ```
 resource "aws_instance" "Webserver1-<yourname>" {
   ami           = "ami-e67c8d89"
@@ -149,6 +152,7 @@ If everything is successful, the output of this first run should be _dns-webserv
 ## Step 5: Create a second instance
 In the same terraform configuration file, let's create a new resource block to add a second EC2 instance to our infrastructure.
 
+*Make sure to replace _<yourname>_ with your name.*
 ```
 resource "aws_instance" "Webserver2-<yourname>" {
   ami           = "ami-e67c8d89"
@@ -168,6 +172,11 @@ On the fly, we should be able to do `terraform apply` again and it should update
 
 ## Step 6: Create an ELB and its security group
 ### Security Group first
+Here again, we need to create a security group  for the ELB to work properly; this one follows the exact same logic as the one above.
+Let's copy it into our _playground.tf_.
+
+*Make sure to replace _<yourname>_ with your name.*
+
 ```
 resource "aws_security_group" "SG-ELB-<yourname>" {
   name = "SG-ELB-<yourname>"
@@ -199,11 +208,12 @@ Luckily, Terraform support ELB perfectly.
 To be clear about ELB, it requires  a few things :
 * Availability zones
 * Security group
-* Listener config
-* Health check config
+* Listener config : Which port is the Load Balancer serving ?
+* Health check config : Which port and URI should the ELB check on ?
 * List of instances handled by ELB
 
-All of these are implicit dependencies to existing resources in the same configuration file.
+Let's copy and paste the code below in our _playground.tf_
+*Make sure to replace _<yourname>_ with your name.*
 
 ```
 resource "aws_elb" "ELB-<yourname>" {
