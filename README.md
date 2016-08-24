@@ -11,9 +11,9 @@ Visualy, we should be able to create the below infrastructure from terraform, in
 The two webserver-images we are using for this playground are baked with some very simple PHP code, to display their local IP.
 # Requirements
 
-1. You should have beeen provided with a VM : a simple Ubuntu 16.04, on which Terraform has been installed.
-2. AWS access keys: here again, they should be baked into the provided VM. See Step 1 to reproduce it with your own keys, if you wish,
-3. Access to an AWS Machine Image, custom made for this playground. This will be a simple webserver image.
+* You should have beeen provided with a VM : a simple Ubuntu 16.04, on which Terraform has been installed.
+* AWS access keys: here again, they should be baked into the provided VM. See Step 1 to reproduce it with your own keys, if you wish,
+* Access to an AWS Machine Image, custom made for this playground. This will be a simple webserver image.
 
 
 # AWS required knowledge
