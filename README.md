@@ -68,7 +68,7 @@ ingress {
 **This block allows any inbound TCP connection from port 22 to port 22, from  any target IP address.**
 
 Let's add the below to our _playground.tf_:
-*Make sure to replace _<yourname>_ with your name.*
+**Make sure to replace _<yourname>_ with your name.**
 ```
 resource "aws_security_group" "SG-Webserver-<yourname>" {
   name = "SG-Webserver-<yourname>"
