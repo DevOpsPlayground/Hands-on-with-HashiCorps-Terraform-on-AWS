@@ -249,3 +249,16 @@ Once this is in the terraform configuration, `terraform plan` and then `terrafor
 
 ## Step 7: Destroying the infrastructure
 Using `terraform destroy` allows you to destroy everything managed by the terraform configuration in a single command.
+
+#Next steps
+This configuration can of course be improved in many ways:
+* Store variables in a different file, making the configuration more flexible.
+* Store the output configuration in a different file, allowing easier modification.
+* Use a secret management tool, such as vault, to safely store sensitive information (AWS keys)
+
+
+#Reading materials
+* [Terraform doc on AWS](https://www.terraform.io/docs/providers/aws/)
+* [AWS blog post on Terraform](https://aws.amazon.com/blogs/apn/terraform-beyond-the-basics-with-aws/)
+* [Terraform best practices](https://github.com/hashicorp/best-practices)
+* [Forest Technologies' Blog](http://www.forest-technologies.co.uk/blog)
