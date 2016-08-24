@@ -20,7 +20,7 @@ The two webserver-images we are using for this playground are baked with some ve
 
 * Elastic Cloud Compute (EC2) : simply put, a serve/machine.
 * Security Group : AWS-level Firewall
-* Amazon Machine Image (AMI) : image template used to create instance from.
+* Amazon Machine Image (AMI) : image template used to create instance from. We aim to use _ami-e67c8d89_ for the Frankfurt zone; alternatively in the Ireland zone _ami-57e19724_ is also available
 * Elastic Load Balancer (ELB) : AWS-specific load balancer
 
 ## Step 0 : On the Virtual Machine
