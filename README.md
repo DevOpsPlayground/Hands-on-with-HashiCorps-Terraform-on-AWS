@@ -2,7 +2,7 @@
 
 
 # Overview
-This Devops Playground will explore Infrastructure as Code with Hashicorp Terraform and  AWS. The plan is to automate the creation of AWS resources, using terraform.  In order to display the full extent of Terraform's features, we will try to lauch two WebServer instances, and put them behind a load balancer, transparently, through a single, unified template.
+This Devops Playground will explore Infrastructure as Code with Hashicorp Terraform and  AWS. The plan is to automate the creation of AWS resources, using terraform.  In order to display the full extent of Terraform's features, we will try to lauch two WebServer instances, and put them behind a load balancer, transparently, through a single, unified configuration file.
 
 ## Expected Solution
 Visualy, we should be able to create the below infrastructure from terraform, in one command. 
@@ -31,33 +31,10 @@ provider "aws" {
 }
 ```
 Here we want to  create resources in the region *eu-central-1*, which is the Frankfurt region.
-## Step 2 : Create one EC2 instance
 
-### Create our first ressources, an EC2 instance and its security group
-The first resource we want to create, as a part of our infrastructure as code configuration, is an EC2 instance.
-For the this playground, Forest technologies has prepared a custom Amazon Machine image *ami-e67c8d89*.
+## Step 2 : Create the Security Group for the Webservers
 
-This AMI is available as a community AMI, and is publicly available. It is a Ubuntu Server image, running an Apache WebServer.
-
-
-```
-resource "aws_instance" "web1" {
-  ami           = "ami-e67c8d89"
-  instance_type = "t2.micro"
-  security_groups = ["${aws_security_group.default.name}"]
-}
-```
-
-Here we decide on which AMI to use, the instance size of the new instance, and its security group.
-
->security_groups = ["${aws_security_group.default.name}"]
-
-This line is what is called an implicit dependency. Using a dynamic reference, Terraform will automatically fill this value, **only when a security group has been created**.
-See next step for the security group.
-
-## Step 3 : Add Security Group
-
-Security group is a AWS level firewall, it comes on top of the machine firewall.
+Security group is an AWS level firewall, it comes on top of the machine firewall.
 It maps what port are open for inbound (**ingress**) and outbound(**egress**) traffic.
 
 The structure of this ressource is very simple:  we give it a name, simply list _ingress_ or _egress_ blocks that describe the network permissions.
@@ -76,9 +53,9 @@ ingress {
 
 Let's add the below to our playground.tf:
 ```
-resource "aws_security_group" "default" {
-  name = "SG_example"
-  description = "Used in the terraform"
+resource "aws_security_group" "SG-Webserver-<yourname>" {
+  name = "SG-Webserver-<yourname>"
+  description = "Security Group used for the Webservers."
 
   # SSH access from anywhere
   ingress {
@@ -107,10 +84,42 @@ resource "aws_security_group" "default" {
 ```
 Here, we simply allow SSH and HHTP connections to our instance.
 
+## Step 3 : Create one EC2 instance
 
-## Step 4 : Apply the template.
+The first resource we want to create, as a part of our infrastructure as code configuration, is an EC2 instance.
+For the this playground, Forest technologies has prepared a custom Amazon Machine image *ami-e67c8d89*.
 
-In the same directory as our template is, let's run :
+This AMI is available as a community AMI, and is publicly available. It is a Ubuntu Server image, running an Apache WebServer.
+
+
+```
+resource "aws_instance" "Webserver1-<yourname>" {
+  ami           = "ami-e67c8d89"
+  instance_type = "t2.micro"
+  security_groups = ["${aws_security_group.SG-Webserver-<yourname>.name}"]
+  tags {
+    Name = "Webserver1-<yourname>"
+  }
+}
+
+output "ip-webserver-1" {
+    value = "${aws_instance.Webserver1-<yourname>.public_dns}"
+}
+```
+
+Here we decide on which AMI to use, the instance size of the new instance, and its security group.
+
+>security_groups = ["${aws_security_group.default.name}"]
+
+This line is what is called an implicit dependency. Using a dynamic reference, Terraform will automatically fill this value, **only when a security group has been created**.
+See next step for the security group.
+
+
+
+
+## Step 4 : Apply the configuration.
+
+In the same directory as our configuration file is, let's run :
 
 
 `terraform plan`
@@ -122,71 +131,31 @@ then
 
 
 ## Step 5: Create a second instance
-In the same terraform template, let's add a a new resource block to add a second EC2 instance.
+In the same terraform configuration file, let's add a a new resource block to add a second EC2 instance.
 
 ```
-resource "aws_instance" "web2" {
+resource "aws_instance" "Webserver2-<yourname>" {
   ami           = "ami-e67c8d89"
   instance_type = "t2.micro"
-  security_groups = ["${aws_security_group.default.name}"]
+  security_groups = ["${aws_security_group.SG-Webserver-<yourname>.name}"]
+  tags {
+    Name = "Webserver2-<yourname>"
+  }
+}
+
+output "ip-webserver-2" {
+    value = "${aws_instance.Webserver2-<yourname>.public_dns}"
 }
 ```
 
 On the fly, we should be able to do `terraform apply` again and it should modify our infrastructure transparently.
 
-## Step 6: Create an ELB
-
-The final piece of our infrastructure is a load balancer. AWS provides us with great way to set up load balancer, with ELB.
-Luckily, Terraform support ELB perfectly.
-
-To be clear about ELB, it requires  a few things :
-1- Availability zones
-2- Security group
-3- Listener config
-4- Health check config
-5- List of instances handled by ELB
-
-All of these are implicit dependencies to existing resources in the same template .
-
-
+## Step 6: Create an ELB and its security group
+### Security Group first
 ```
-resource "aws_elb" "web" {
-  name = "example-elb"
-
-  # The same availability zone as our instance
-  availability_zones = ["${aws_instance.web1.availability_zone}"]
-  security_groups = ["${aws_security_group.elb.id}"]
-  listener {
-    instance_port = 80
-    instance_protocol = "http"
-    lb_port = 80
-    lb_protocol = "http"
-  }
-
-  health_check {
-    healthy_threshold = 2
-    unhealthy_threshold = 2
-    timeout = 3
-    target = "HTTP:80/"
-    interval = 30
-  }
-
-  # The instance is registered automatically
-  instances = ["${aws_instance.web1.id}","${aws_instance.web2.id}"]
-
-  cross_zone_load_balancing = true
-  idle_timeout = 400
-  connection_draining = true
-  connection_draining_timeout = 400
-
-}
-```
-#### ... and its security Group
-```
-
-resource "aws_security_group" "elb" {
-  name = "elb_sg"
-  description = "Used in the terraform"
+resource "aws_security_group" "SG-ELB-<yourname>" {
+  name = "SG-ELB-<yourname>"
+  description = "Security Group used for the ELB."
 
   # HTTP access from anywhere
   ingress {
@@ -206,4 +175,58 @@ resource "aws_security_group" "elb" {
 }
 ```
 
-Once this is in the terraform template, `terraform plan` and then `terraform apply`
+### And finally the load balancer
+
+The final piece of our infrastructure is a load balancer. AWS provides us with great way to set up load balancer, with ELB.
+Luckily, Terraform support ELB perfectly.
+
+To be clear about ELB, it requires  a few things :
+1- Availability zones
+2- Security group
+3- Listener config
+4- Health check config
+5- List of instances handled by ELB
+
+All of these are implicit dependencies to existing resources in the same configuration file.
+
+```
+resource "aws_elb" "ELB-<yourname>" {
+  name = "ELB-<yourname>"
+
+  # The same availability zone as our instance
+  availability_zones = ["${aws_instance.Webserver1-<yourname>.availability_zone}"]
+  security_groups = ["${aws_security_group.SG-ELB-<yourname>.id}"]
+  listener {
+    instance_port = 80
+    instance_protocol = "http"
+    lb_port = 80
+    lb_protocol = "http"
+  }
+
+  health_check {
+    healthy_threshold = 2
+    unhealthy_threshold = 2
+    timeout = 3
+    target = "HTTP:80/"
+    interval = 30
+  }
+
+  # The instance is registered automatically
+  instances = ["${aws_instance.Webserver1-<yourname>.id}","${aws_instance.Webserver2-<yourname>.id}"]
+
+  cross_zone_load_balancing = true
+  idle_timeout = 400
+  connection_draining = true
+  connection_draining_timeout = 400
+
+}
+
+output "ip-ELB" {
+    value = "${aws_elb.ELB-<yourname>.dns_name}"
+}
+```
+
+Once this is in the terraform configuration, `terraform plan` and then `terraform apply`
+
+## Step 7: Destroying the infrastructure
+Using `terraform destroy` allows you to destroy everything managed by the terraform configuration in a single command.
