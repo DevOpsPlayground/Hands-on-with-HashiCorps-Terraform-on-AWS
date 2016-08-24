@@ -197,11 +197,11 @@ The final piece of our infrastructure is a load balancer. AWS provides us with g
 Luckily, Terraform support ELB perfectly.
 
 To be clear about ELB, it requires  a few things :
-1- Availability zones
-2- Security group
-3- Listener config
-4- Health check config
-5- List of instances handled by ELB
+* Availability zones
+* Security group
+* Listener config
+* Health check config
+* List of instances handled by ELB
 
 All of these are implicit dependencies to existing resources in the same configuration file.
 
