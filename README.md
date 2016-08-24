@@ -11,7 +11,24 @@ Visualy, we should be able to create the below infrastructure from terraform, in
 The two webserver-images we are using for this playground are baked with some very simple PHP code, to display their local IP.
 # Requirements
 
+1. You should have beeen provided with a VM : a simple Ubuntu 16.04, on which Terraform has been installed.
+2. AWS access keys: here again, they should be baked into the provided VM. See Step 1 to reproduce it with your own keys, if you wish,
+3. Access to an AWS Machine Image, custom made for this playground. This will be a simple webserver image.
+
+
 # AWS required knowledge
+
+* Elastic Cloud Compute (EC2) : simply put, a serve/machine.
+* Security Group : AWS-level Firewall
+* Amazon Machine Image (AMI) : image template used to create instance from.
+* Elastic Load Balancer (ELB) : AWS-specific load balancer
+
+## Step 0 : On the Virtual Machine
+
+On the VM, there should be a `playground/` folder, in which we will find a *playground.tf*.
+
+This playground will entirely be done in this *playground.tf* file.
+Using your favorite text editor, edit this file.
 
 ## Step 1 : Define the Provider
 
