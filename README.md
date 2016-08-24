@@ -69,7 +69,7 @@ ingress {
 
 Let's add the below to our _playground.tf_:
 
-**Make sure to replace '<yourname>' with your name.**
+**Make sure to replace \<yourname\> with your name.**
 ```
 resource "aws_security_group" "SG-Webserver-<yourname>" {
   name = "SG-Webserver-<yourname>"
