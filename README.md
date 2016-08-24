@@ -138,12 +138,16 @@ See next step for the security group.
 
 In the same directory as our configuration file is, let's run :
 
+Terraform can simulate the effect of a configuration change, before applying it.  It is checking the current state of the infrastructure (at this stage it is inexistant) and simply list the operations that needs to be performed to follow the new configuration; some ressources will be added, edited or deleted.
 
 `terraform plan`
 
-then
+If we are satisfied with the plan, we can 'push' the changes to AWS, and terraform will create all the resources in the right order.
 
 `terraform apply`
+
+...This operation can take several minutes to finish.
+
 
 
 
