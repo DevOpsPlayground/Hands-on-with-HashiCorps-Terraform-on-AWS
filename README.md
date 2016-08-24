@@ -1,4 +1,4 @@
-# devopsplayground6-terraform
+# DevOps Playground 6: Hands On with HashiCorp's Terraform
 
 
 # Overview
