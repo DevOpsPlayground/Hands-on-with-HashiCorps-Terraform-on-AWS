@@ -37,8 +37,8 @@ Before Terraform can create resources, it needs to know which platform to connec
 Terraform supports most of the public cloud providers, including AWS.
 In our case,we want terraform to connect to AWS using existing AWS keys.
 
-In the code below, we explicitly define which Access and Secret Key to use and which AWS region we want to create our resources in.
-
+In the code below, we explicitly define which Access and Secret Key to use and which AWS region we want to create our resources in. You'll have to put your own access keys to make it work.
+Let's create a _playground.tf_ file, and copy-paste the following code. 
 ```
 provider "aws" {
   access_key = "<ACCESS_KEY>"
